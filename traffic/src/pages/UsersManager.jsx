@@ -23,12 +23,6 @@ const UsersManager = () => {
 
   const handleChange = (e) => {
     setActiveOverlay(true);
-    // let user = {
-    //   token: currentUser?.token,
-    //   role: e.target.value,
-    //   page: page
-    // }
-    // dispatch(getListUsers(user))
     setRole(e.target.value);
     setPage(1);
   }
@@ -56,7 +50,6 @@ const UsersManager = () => {
 
   useEffect(() => {
     if (!users) return;
-    // setActiveOverlay(false);
     setTimeout(() => {
       setActiveOverlay(false);
     }, 1000)
@@ -117,9 +110,6 @@ const UsersManager = () => {
             </div>
           </div>
         </div>
-        {/* <div className="w-full lg:w-2/5">
-        <img src="https://source.unsplash.com/MP0IUfwrn0A" className="hidden rounded-none shadow-2xl lg:rounded-lg lg:block" />
-      </div> */}
       </div>
     </div>
   )

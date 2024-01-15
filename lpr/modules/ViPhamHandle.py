@@ -26,10 +26,6 @@ class ViPhamHandler(Resource):
                     "message": "Not enough permission",
                     "data": None
                 }
-        # print(plate)
-        # plate_ = self.collection.find({
-        #     "plate": plate
-        # }, {"_id" : 0})
         print(plate)
         len_ = self.collection.count_documents({
             "plate": plate
@@ -38,18 +34,6 @@ class ViPhamHandler(Resource):
         plate_ = self.collection.find({
             "plate": plate
         }, {"_id" : 0}).skip((page-1)*10).limit(10)
-        
-        # date_ = [d for d in date_]
-        # if date_ is not None:
-        #     return {
-        #         "len" : len_,
-        #         "data": date_
-        #     }
-        # else:
-        #     return {
-        #         "data": None
-        #     }
-        
         
         plate_ = [plate for plate in plate_]
         if plate_ is not None:

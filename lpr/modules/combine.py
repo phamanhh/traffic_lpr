@@ -11,10 +11,9 @@ from difflib import SequenceMatcher
 
 os.environ[ "OPENCV_FFMPEG_READ_ATTEMPTS"] = "1000000"
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
-# C:\\Users\\ADMIN\\Desktop\\traffic_lpr\\lpr\\modules\\license_detector.pt
 
 coco_model_path = "C:\\Users\\ADMIN\\Desktop\\source_code_datn\\lpr\\modules\\yolov8n.pt"
-lpr_model_path  = "C:\\Users\ADMIN\\Desktop\\source_code_datn\\lpr\\modules\\best.pt"
+lpr_model_path  = "C:\\Users\ADMIN\\Desktop\\source_code_datn\\lpr\\modules\\license_detector.pt"
 
 
 # Function to convert bounding box string to a list of floats
@@ -32,32 +31,6 @@ def get_center(bbox):
     x1, y1, x2, y2 = bbox
     return (x1 + x2) / 2, (y1 + y2) / 2
 
-
-def calculate_similarity(str1, str2):
-    return SequenceMatcher(None, str1, str2).ratio()
-
-# Hàm loại bỏ các dòng trùng lặp
-def remove_duplicates(df, thresh):
-    df = df[df['license_number'] != 'empty']
-    rows_to_remove = set()
-
-    for i in range(len(df)):
-        if i not in rows_to_remove:
-            similar_rows = {i}
-            for j in range(i + 1, len(df)):
-                if j not in rows_to_remove:
-                    similarity = calculate_similarity(df.iloc[i]['license_number'], df.iloc[j]['license_number'])
-                    if similarity > thresh:
-                        similar_rows.add(j)
-
-            if len(similar_rows) > 1:
-                # Nếu có 2 dòng trở lên giống nhau, loại bỏ dòng có score thấp nhất
-                max_score_row = max(similar_rows, key=lambda x: df.iloc[x]['license_number_score'])
-                similar_rows.remove(max_score_row)
-                rows_to_remove.update(similar_rows)
-
-    filtered_df = df.drop(index=list(rows_to_remove))
-    return filtered_df
 
 
 def read_lpr(video_path):
@@ -84,7 +57,6 @@ def read_lpr(video_path):
     frame_nmr = -1
     ret = True
     cnt = 0
-    # video = cv2.VideoWriter("./response.mp4", 0, 1, (1280, 384 * 2))
     while ret:
         cnt = cnt + 1
         print(cnt)
@@ -110,8 +82,6 @@ def read_lpr(video_path):
                 xcar1, ycar1, xcar2, ycar2, car_id = get_car(license_plate, track_ids)
                 license_plate_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
                 license_plate_crop_gray = cv2.cvtColor(license_plate_crop, cv2.COLOR_BGR2GRAY)
-                # _, license_plate_crop_thresh = cv2.threshold(license_plate_crop_gray, 64, 255, cv2.THRESH_BINARY_INV)
-
                 license_plate_text, license_plate_text_score = read_license_plate(license_plate_crop_gray)
 
                 # Draw bounding box and license plate information on the frame
@@ -145,8 +115,6 @@ def read_lpr(video_path):
                                 (0, 255, 0), 2)
                     cv2.putText(frame, f'Plate: {license_plate_text}', (int(x1), int(y1) - 10),
                                 cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 0), 2)
-                    # cv2.putText(frame, f'Plate: {license_plate_text}', (int(x1), int(y1) - 10),
-                    #             cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 0), 2)
                 else:
                     results[frame_nmr][car_id] = {
                         'car': {'bbox': [xcar1, ycar1, xcar2, ycar2]},
@@ -190,7 +158,6 @@ def calculate_speed(result_path, fps):
     for car_id in data['car_id'].unique():
         car_data = data[data['car_id'] == car_id].sort_values(by='frame_nmr')
         max_conf_row = car_data.loc[car_data['license_number_score'].idxmax()]
-        # try:
         if(1>0):
             prev_row = car_data.iloc[0]
             current_row = car_data.iloc[len(car_data)-1]
@@ -208,8 +175,6 @@ def calculate_speed(result_path, fps):
                 max_conf_row['speed'] = speed
             else:
                 max_conf_row['speed'] = 0
-        # except:
-        #     max_conf_row['speed'] = 0
             
         # print(max_conf_row)
         final_df = pd.concat([final_df, pd.DataFrame([max_conf_row])], ignore_index=True)
@@ -219,9 +184,6 @@ def calculate_speed(result_path, fps):
 
     # loại bỏ các dòng có speed = 0
     final_df = final_df[final_df['speed'] != 0]
-
-    # final_df = pd.concat([final_df[final_df['license_number'] == 'empty'],
-    #                      (final_df[final_df['license_number'] != 'empty'].sort_values('license_plate_bbox_score', ascending=False).drop_duplicates('license_number'))],  ignore_index=True)
     final_df = final_df[final_df['license_number'] != 'empty'].sort_values('license_plate_bbox_score', ascending=False).drop_duplicates('license_number')
     # final_df = remove_duplicates(final_df, 0.7)
     final_df = final_df[final_df['license_number'] != 'empty']

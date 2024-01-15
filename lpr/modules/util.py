@@ -36,13 +36,6 @@ dict_int_to_char = {'0': 'Q',
 
 
 def write_csv(results, output_path):
-    """
-    Write the results to a CSV file.
-
-    Args:
-        results (dict): Dictionary containing the results.
-        output_path (str): Path to the output CSV file.
-    """
     with open(output_path, 'w') as f:
         f.write('{},{},{},{},{},{},{},{}\n'.format('frame_nmr', 'car_id', 'car_bbox',
                                                 'license_plate_bbox', 'license_plate_bbox_score', 'license_number',

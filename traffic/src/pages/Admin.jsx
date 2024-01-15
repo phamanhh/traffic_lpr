@@ -9,7 +9,6 @@ const Admin = () => {
       <Sidebar />
       <div className='ml-[320px] h-screen'>
         <Toast />
-        {/* <UserInfo /> */}
         <Outlet />
       </div>
     </div>

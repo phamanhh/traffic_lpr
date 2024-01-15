@@ -76,7 +76,6 @@ const ViolationStatistic = () => {
     <div className="h-screen font-sans antialiased leading-normal tracking-wider text-gray-900 bg-cover animate-fade-right">
       <LoadingOverlayComp isActive={activeOverlay} />
       <ViolationStatisticResult date={date} token={token} showViolationResult={showViolationResult} setShowViolationResult={setShowViolationResult} violation={violationResult} />
-      {/* <ImageResult imageResult={imageResult} showResult={showResult} setShowResult={setShowResult} /> */}
       <div className="flex flex-wrap items-center justify-center h-full max-w-screen-lg mx-auto lg:h-full lg:my-0">
         <div id="profile" className="w-full mx-6 bg-white rounded-lg shadow-2xl lg:w-4/5 lg:mx-0">
           <div className="p-4 text-center md:p-12 lg:text-left">
@@ -97,9 +96,6 @@ const ViolationStatistic = () => {
             </div>
           </div>
         </div>
-        {/* <div className="w-full lg:w-2/5">
-        <img src="https://source.unsplash.com/MP0IUfwrn0A" className="hidden rounded-none shadow-2xl lg:rounded-lg lg:block" />
-      </div> */}
       </div>
     </div>
   )

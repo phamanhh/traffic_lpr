@@ -7,7 +7,6 @@ import numpy as np
 import cv2
 from flask import Flask, render_template, request, redirect, url_for
 import os
-# from modules.MobilenetV3 import MobileNetV3
 import pandas as pd
 import firebase_admin
 from firebase_admin import credentials, firestore, storage
@@ -30,77 +29,76 @@ firebase_admin.initialize_app(cred, firebase_config)
 
 class VideoReg(Resource):
     def post(self):
-        # try:
-            token = request.form['token']
-            maxSpeed = int(request.form['maxSpeed'])
-            user = jwt.decode(token, PRIVATE_KEY, algorithms=["HS256"])
-            print(user['role'])
-            if user['role']=='user':
-                return {
-                    "error": True,
-                    "message": "Not enough permission",
-                    "data" : None,
-                }
-            vid_id = uuid.uuid4().hex
-            file = request.files['file']
-            file.save("response.mp4")
-            result_path, fps = read_lpr("C:\\Users\\ADMIN\\Desktop\\source_code_datn\\lpr\\response.mp4")
-            final_df, number_of_car = calculate_speed(result_path, fps)
-            bucket = storage.bucket()
-            blob = bucket.blob('response.mp4')
-            outfile='C:\\Users\\ADMIN\\Desktop\\source_code_datn\\lpr\\output_video.mp4'
-            with open(outfile, 'rb') as my_file:
-                blob.upload_from_file(my_file)
-            blob.make_public()
-
-            l = []
-            for idx in final_df.index:
-                speed = final_df.loc[idx, "speed"].round()
-                plate = final_df.loc[idx, "license_number"]
-                base64_img = final_df.loc[idx, "base64_img"]
-                import math
-                x = math.isnan(speed)
-                if (x == False and int(speed)>maxSpeed):
-                    l.append({
-                        "image" : base64_img[1:].replace("'",""),
-                        "speed" : speed,
-                        "plate" : plate,
-                        "speeding" : True,
-                        "date" : datetime.strftime(datetime.now(), "%Y-%m-%d")
-                    })
-                    collection = MongoClient(URI).main.vi_pham
-                    collection.insert_one({
-                        "image" : base64_img[1:].replace("'",""),
-                        "speed" : speed,
-                        "plate" : plate,
-                        "speeding" : True,
-                        "date" : datetime.strftime(datetime.now(), "%Y-%m-%d")
-                    })
-                else:
-                    l.append({
-                        "image" : base64_img[1:].replace("'",""),
-                        "speed" : speed,
-                        "plate" : plate,
-                        "speeding" : False,
-                    })
-
-            item = {
-                "vid_id" : vid_id,
-                "list" : l,
-                "count" : len(l),
-                # "count" : number_of_car,
-                "date" : datetime.strftime(datetime.now(), "%Y-%m-%d")
+        token = request.form['token']
+        maxSpeed = int(request.form['maxSpeed'])
+        user = jwt.decode(token, PRIVATE_KEY, algorithms=["HS256"])
+        print(user['role'])
+        if user['role']=='user':
+            return {
+                "error": True,
+                "message": "Not enough permission",
+                "data" : None,
             }
-            collection = MongoClient(URI).main.log_video
-            collection.insert_one(item)
-            return  {
-                "error": False,
-                "message": "Success",
-                "data" : {
-                    "cloudPath" : blob.public_url,
-                    "video_id" : vid_id,
-                }
+        vid_id = uuid.uuid4().hex
+        file = request.files['file']
+        file.save("response.mp4")
+        result_path, fps = read_lpr("C:\\Users\\ADMIN\\Desktop\\source_code_datn\\lpr\\response.mp4")
+        final_df, number_of_car = calculate_speed(result_path, fps)
+        bucket = storage.bucket()
+        blob = bucket.blob('response.mp4')
+        outfile='C:\\Users\\ADMIN\\Desktop\\source_code_datn\\lpr\\output_video.mp4'
+        with open(outfile, 'rb') as my_file:
+            blob.upload_from_file(my_file)
+        blob.make_public()
+
+        l = []
+        for idx in final_df.index:
+            speed = final_df.loc[idx, "speed"].round()
+            plate = final_df.loc[idx, "license_number"]
+            base64_img = final_df.loc[idx, "base64_img"]
+            import math
+            x = math.isnan(speed)
+            if (x == False and int(speed)>maxSpeed):
+                l.append({
+                    "image" : base64_img[1:].replace("'",""),
+                    "speed" : speed,
+                    "plate" : plate,
+                    "speeding" : True,
+                    "date" : datetime.strftime(datetime.now(), "%Y-%m-%d")
+                })
+                collection = MongoClient(URI).main.vi_pham
+                collection.insert_one({
+                    "image" : base64_img[1:].replace("'",""),
+                    "speed" : speed,
+                    "plate" : plate,
+                    "speeding" : True,
+                    "date" : datetime.strftime(datetime.now(), "%Y-%m-%d")
+                })
+            else:
+                l.append({
+                    "image" : base64_img[1:].replace("'",""),
+                    "speed" : speed,
+                    "plate" : plate,
+                    "speeding" : False,
+                })
+
+        item = {
+            "vid_id" : vid_id,
+            "list" : l,
+            "count" : len(l),
+            # "count" : number_of_car,
+            "date" : datetime.strftime(datetime.now(), "%Y-%m-%d")
+        }
+        collection = MongoClient(URI).main.log_video
+        collection.insert_one(item)
+        return  {
+            "error": False,
+            "message": "Success",
+            "data" : {
+                "cloudPath" : blob.public_url,
+                "video_id" : vid_id,
             }
+        }
 
 
 class GetVidInfo(Resource):
@@ -112,27 +110,17 @@ class GetVidInfo(Resource):
         self.args = args
 
     def post(self):
-        # try:
-            args = self.args.parse_args()
-            item = self.collection.find_one({"vid_id": args['vid_id']})
+        args = self.args.parse_args()
+        item = self.collection.find_one({"vid_id": args['vid_id']})
 
-            len_ = len(item['list'])
-
-            # users = [user for user in users]
-            print(len_)
-            return {
-                "error": False,
-                "message": "",
-                "data" : {
-                    "count" : item['count'],
-                    "list" : item['list'][(args['page']-1)*10: args['page']*10],
-                    "len":   len_
-                },
-            }
-
-        # except Exception as e:
-        #     return {
-        #         "error": True,
-        #         "message": e,
-        #         "data" : "",
-        #     }
+        len_ = len(item['list'])
+        print(len_)
+        return {
+            "error": False,
+            "message": "",
+            "data" : {
+                "count" : item['count'],
+                "list" : item['list'][(args['page']-1)*10: args['page']*10],
+                "len":   len_
+            },
+        }

@@ -90,7 +90,6 @@ const ViolationStatisticResult = ({ showViolationResult, setShowViolationResult,
                             <td className="px-6 whitespace-nowrap">{item.speed.toFixed(2)}</td>
                             <td className="px-6 whitespace-nowrap">{item.plate}</td>
                             <td className="px-6 whitespace-nowrap">{item.date}</td>
-                            {/* <td className="px-6 py-4 whitespace-nowrap">{item.speeding ? isNotOk : isOk}</td> */}
                           </tr>
                         )
                       })}

@@ -51,9 +51,6 @@ const UserInfo = () => {
             </div>
 
           </div>
-          {/* <div className="w-full lg:w-2/5">
-          <img src="https://source.unsplash.com/MP0IUfwrn0A" className="hidden rounded-none shadow-2xl lg:rounded-lg lg:block" />
-        </div> */}
         </div>
       </div>
     </UserContextProvider>
