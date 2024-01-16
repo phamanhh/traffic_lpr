@@ -12,7 +12,7 @@ import { TextField } from '@mui/material';
 
 const TrafficTracking = () => {
   const [selectVideo, setSelectVideo] = useState(null);
-  const [maxSpeed, setMaxSpeed] = useState(80);
+  const [maxSpeed, setMaxSpeed] = useState(60);
   const dispatch = useDispatch();
   const [loadingBtn, setLoadingBtn] = useState(false);
   const currentUser = useLocalStorage('loginUser')[0];
@@ -103,7 +103,7 @@ const TrafficTracking = () => {
                 id="outlined-required"
                 label="Giới hạn tốc độ *bắt buộc"
                 type="number"
-                defaultValue="80"
+                defaultValue="60"
                 value={maxSpeed}
                 onChange={handleTextFieldChange}
               />

@@ -42,11 +42,11 @@ class VideoReg(Resource):
         vid_id = uuid.uuid4().hex
         file = request.files['file']
         file.save("response.mp4")
-        result_path, fps = read_lpr("C:\\Users\\ADMIN\\Desktop\\source_code_datn\\lpr\\response.mp4")
+        result_path, fps = read_lpr("C:\\Users\\ADMIN\\Desktop\\traffic_lpr\\lpr\\response.mp4")
         final_df, number_of_car = calculate_speed(result_path, fps)
         bucket = storage.bucket()
         blob = bucket.blob('response.mp4')
-        outfile='C:\\Users\\ADMIN\\Desktop\\source_code_datn\\lpr\\output_video.mp4'
+        outfile='C:\\Users\\ADMIN\\Desktop\\traffic_lpr\\lpr\\output_video.mp4'
         with open(outfile, 'rb') as my_file:
             blob.upload_from_file(my_file)
         blob.make_public()

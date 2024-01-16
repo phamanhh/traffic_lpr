@@ -12,8 +12,8 @@ from difflib import SequenceMatcher
 os.environ[ "OPENCV_FFMPEG_READ_ATTEMPTS"] = "1000000"
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
-coco_model_path = "C:\\Users\\ADMIN\\Desktop\\source_code_datn\\lpr\\modules\\yolov8n.pt"
-lpr_model_path  = "C:\\Users\ADMIN\\Desktop\\source_code_datn\\lpr\\modules\\license_detector.pt"
+coco_model_path = "C:\\Users\\ADMIN\\Desktop\\traffic_lpr\\lpr\\modules\\yolov8n.pt"
+lpr_model_path  = "C:\\Users\\ADMIN\\Desktop\\traffic_lpr\\lpr\\modules\\license_detector.pt"
 
 
 # Function to convert bounding box string to a list of floats
@@ -143,7 +143,7 @@ def read_lpr(video_path):
 def calculate_speed(result_path, fps):
     data = pd.read_csv(result_path)
     frame_rate = fps  
-    alpha = 0.16
+    alpha = 0.18
     print(frame_rate)
 
     # Convert bounding box strings to lists
