@@ -1,7 +1,7 @@
-USER = "admin"
-PASSWORD = "admin123"
+USER = "root"
+PASSWORD = "123"
 
-URI = f"mongodb+srv://{USER}:{PASSWORD}@main.xnq2uwq.mongodb.net/"
+URI = f"mongodb+srv://root:123@cluster0.tigrjmu.mongodb.net/"
 
 firebase_config = {
   "apiKey": "AIzaSyAlqF1_JPWxAPrcOKSSpjveEBks2aaGKso",

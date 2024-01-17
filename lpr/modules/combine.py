@@ -12,6 +12,7 @@ from difflib import SequenceMatcher
 os.environ[ "OPENCV_FFMPEG_READ_ATTEMPTS"] = "1000000"
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
+
 coco_model_path = "C:\\Users\\ADMIN\\Desktop\\traffic_lpr\\lpr\\modules\\yolov8n.pt"
 lpr_model_path  = "C:\\Users\\ADMIN\\Desktop\\traffic_lpr\\lpr\\modules\\license_detector.pt"
 
