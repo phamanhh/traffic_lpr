@@ -144,7 +144,7 @@ def read_lpr(video_path):
 def calculate_speed(result_path, fps):
     data = pd.read_csv(result_path)
     frame_rate = fps  
-    alpha = 0.18
+    alpha = 0.17
     print(frame_rate)
 
     # Convert bounding box strings to lists
